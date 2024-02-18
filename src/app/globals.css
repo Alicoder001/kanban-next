@@ -3,31 +3,60 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --primary-color: #635fc7;
+  --main-color: #a8a4ff;
+  --black: #000112;
+  --second-black: #20212c;
+  --third-black: #2b2c37;
+  --fourth-black: #2b2c37;
+  --gray: #828fa3;
+  --middle-gray: #e4ebfa;
+  --light-gray: #f4f7fd;
+  --white: #fff;
+  --red: #ea5555;
+  --bg-color: #f4f7fd;
+  --wrap-bg-color: linear-gradient(
+    180deg,
+    #e9effa 0%,
+    rgba(233, 239, 250, 0.5) 100%
+  );
+  --navbar-color: var(--white);
+  --card-color: var(--white);
+  --card-shadow: 0px 4px 6px 0px rgba(54, 78, 126, 0.1);
+  --light-right: #ff9898;
+  --btn-pri-L: #635fc7;
+  --btn-pri-S: #635fc7;
+  --btn-pri-L-hr: #a8a4ff;
+  --btn-pri-S-hr: #a8a4ff;
+  --btn-sec: rgba(99, 95, 199, 0.1);
+  --btn-sec-hover: rgba(99, 95, 199, 0.25);
+  --btn-des: #ea5555;
+  --btn-des: #ff9898;
+  --btn-pri-text: #fff;
+  --btn-sec-text: #635fc7;
+  --btn-des-text: #fff;
+  --title-color: #000112;
+  --subt-color: #828fa3;
+  --line-color: #e4ebfa;
+  --modal-bg: rgba(0, 0, 0, 0.5);
+  --jakarta: var(--jakarta);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.dark {
+  --bg-color: #20212c;
+  --btn-sec: #ffffff;
+  --btn-sec-hover: #ffffff;
+  --wrap-bg-color: linear-gradient(
+    180deg,
+    rgba(43, 44, 55, 0.25) 0%,
+    rgba(43, 44, 55, 0.13) 100%
+  );
+  --navbar-color: var(--fourth-black);
+  --card-color: var(--fourth-black);
+  --card-shadow: 0px 4px 6px 0px rgba(54, 78, 126, 0.1);
+  --title-color: #ffffff;
+  --subt-color: #828fa3;
+  --line-color: #3e3f4e;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
+/* @media (prefers-color-scheme: dark) {} */
