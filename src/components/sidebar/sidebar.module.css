@@ -1,0 +1,153 @@
+.sidebar {
+  background-color: var(--navbar-color);
+  height: 100%;
+  width: 30rem;
+  z-index: 2;
+  min-height: 100vh;
+  border-right: 1px solid var(--line-color);
+  transition: 0.5s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: fixed;
+}
+.header {
+  padding-left: 3.4rem;
+  padding-top: 3.2rem;
+  margin-bottom: 5.4rem;
+}
+.main {
+  padding-right: 2.4rem;
+  height: 100%;
+  margin-bottom: auto;
+}
+
+.title {
+  margin-bottom: 1.9rem;
+  margin-left: 3.2rem;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+}
+.item {
+  padding: 1.4rem 3.2rem;
+  display: flex;
+  gap: 1.6rem;
+  font-size: 1.5rem;
+  border-top-right-radius: 10rem;
+  border-bottom-right-radius: 10rem;
+  transition: 0.5s;
+}
+.item.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+.item.active h3 {
+  color: white;
+}
+.item:hover {
+  cursor: pointer;
+  background-color: var(--primary-color-hv);
+}
+.item:hover h3 {
+  color: var(--primary-color);
+}
+.iconActive svg {
+  fill: #fff !important;
+}
+.createItem h3 {
+  color: var(--primary-color);
+}
+.footer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 3.2rem;
+}
+.mode {
+  display: flex;
+  align-items: center;
+  gap: 2.3rem;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: var(--bg-color);
+  border-radius: 5px;
+  margin: 0 2.5rem 0.8rem 2.5rem;
+}
+
+.toggle {
+  width: 4rem;
+  height: 2rem;
+  border-radius: 10px;
+  background-color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  padding: 0.3rem;
+  justify-content: start;
+}
+
+.toggle:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+.toggle:hover.circle {
+  margin: 0 0 0 auto;
+}
+.toggleLeft {
+  justify-content: end;
+}
+.circle {
+  background-color: #fff;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  transform: translateX(0);
+  transition: 0.2s;
+}
+
+.circleRight {
+  transform: translateX(2rem);
+}
+.hide {
+  padding: 1.4rem 3.2rem 1.5rem;
+  display: flex;
+  gap: 1.6rem;
+  font-size: 1.5rem;
+  border-top-right-radius: 10rem;
+  border-bottom-right-radius: 10rem;
+  margin-right: 2.4rem;
+  transition: 0.5s;
+}
+.hide:hover {
+  cursor: pointer;
+  background-color: var(--primary-color-hv);
+}
+.hide:hover h3 {
+  color: var(--primary-color);
+}
+.hideTitle {
+  color: var(--subt-color);
+}
+.eyes {
+  position: fixed;
+  left: 0;
+  bottom: 3.2rem;
+  width: 5.6rem;
+  height: 4.8rem;
+  border-top-right-radius: 2.4rem;
+  border-bottom-right-radius: 2.4rem;
+  padding: 0 2.2rem 0 1.8rem;
+  display: flex;
+  align-items: center;
+  background-color: var(--primary-color);
+  transition: all 0.5s;
+}
+
+.eyes:hover {
+  background-color: var(--btn-pri-L-hr);
+  cursor: pointer;
+}
+.left {
+  transform: translateX(-100%);
+}

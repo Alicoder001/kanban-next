@@ -1,0 +1,51 @@
+.tasks {
+  display: flex;
+  padding: 2.4rem;
+  height: 100%;
+  margin-bottom: 5rem;
+}
+.categories {
+  display: flex;
+  gap: 2.4rem;
+}
+.category {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+.taskList {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: space-around;
+}
+.titleWrap {
+  display: flex;
+  gap: 1.2rem;
+}
+.circle {
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: var(--primary-color);
+}
+.task {
+  padding: 2.3rem 1.6rem;
+  background-color: var(--card-color);
+  box-shadow: var(--card-shadow);
+  border-radius: 8px;
+  display: flex;
+  gap: 0.8rem;
+  flex-direction: column;
+  width: 28.8rem;
+}
+.newCategory {
+  width: 28.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: var(--wrap-bg-color);
+  margin-top: 3.9rem;
+  border-radius: 0.6rem;
+}
