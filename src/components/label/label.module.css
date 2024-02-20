@@ -1,0 +1,11 @@
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.span {
+  font-size: 1.2rem;
+  color: var(--subt-color);
+  line-height: normal;
+  letter-spacing: normal;
+}

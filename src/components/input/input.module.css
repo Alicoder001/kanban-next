@@ -1,0 +1,29 @@
+.wrap {
+  display: flex;
+  gap: 1.6rem;
+}
+.input {
+  width: 100%;
+  padding: 0.8rem 1.6rem 0.9rem;
+  border: 1px solid var(--input-line);
+  font-size: 1.3rem;
+  line-height: 2.3rem;
+  font-weight: 500;
+  color: var(--title-color);
+  border-radius: 0.4rem;
+}
+.input::placeholder {
+  color: var(--title-color);
+  opacity: 0.25;
+}
+.input:hover {
+  border: 1px solid var(--primary-color);
+}
+.input:focus {
+  outline: none;
+  border: 1px solid var(--primary-color);
+}
+.trash:hover {
+  cursor: pointer;
+  scale: 1.3;
+}

@@ -1,0 +1,13 @@
+.title {
+  color: var(--red);
+}
+.subtitle {
+  color: var(--subt-color);
+  font-weight: 500;
+  line-height: 2.3rem;
+}
+.wrap {
+  display: flex;
+  gap: 1.6rem;
+  margin-bottom: 0.8rem;
+}

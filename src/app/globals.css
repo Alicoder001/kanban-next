@@ -32,7 +32,7 @@
   --btn-sec: rgba(99, 95, 199, 0.1);
   --btn-sec-hover: rgba(99, 95, 199, 0.25);
   --btn-des: #ea5555;
-  --btn-des: #ff9898;
+  --btn-des-hr: #ff9898;
   --btn-pri-text: #fff;
   --btn-sec-text: #635fc7;
   --btn-des-text: #fff;
@@ -41,6 +41,7 @@
   --line-color: #e4ebfa;
   --modal-bg: rgba(0, 0, 0, 0.5);
   --jakarta: var(--jakarta);
+  --input-line: rgba(130, 143, 163, 0.25);
 }
 
 .dark {
