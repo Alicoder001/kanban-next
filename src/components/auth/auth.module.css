@@ -1,0 +1,32 @@
+.auth {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+.wrap {
+  max-width: 48rem;
+  width: 100%;
+  padding: 3.2rem;
+  border-radius: 0.6rem;
+  background-color: var(--card-color);
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  box-shadow: var(--card-shadow);
+}
+.link {
+  font-weight: 500;
+  color: var(--subt-color);
+  font-size: 1.5rem;
+}
+.link a {
+  font-weight: 700;
+  color: var(--primary-color);
+}
+.link a:hover {
+  text-decoration: underline;
+}

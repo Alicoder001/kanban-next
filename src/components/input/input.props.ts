@@ -6,4 +6,5 @@ export interface InputProps
     HTMLInputElement
   > {
   trash?: boolean;
+  itemKey?: string;
 }

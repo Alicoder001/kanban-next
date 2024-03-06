@@ -15,9 +15,18 @@ import moonLight from "../../images/moonLight.svg";
 import eyesLight from "../../images/eyes-light.svg";
 import eyesDark from "../../images/eyes-dark.svg";
 import eye from "../../images/eye-light.svg";
-const Sidebar = ({ className, ...props }: SidebarProps): JSX.Element => {
+import Link from "next/link";
+import { useParams } from "next/navigation";
+const Sidebar = ({
+  className,
+  boards,
+  ...props
+}: SidebarProps): JSX.Element => {
   const [show, setShow] = useState(false);
   const [dark, setDark] = useState(false);
+  const params = useParams();
+  const boardId = params.boardId;
+
   return (
     <>
       <div
@@ -31,26 +40,24 @@ const Sidebar = ({ className, ...props }: SidebarProps): JSX.Element => {
         <div className={styles.main}>
           <h4 className={styles.title}>ALL BOARDS (3)</h4>
           <ul className={styles.list}>
-            <li className={cn(styles.item, { [styles.active]: true })}>
-              <Image
-                className={styles.iconActive}
-                src={iconLight}
-                alt="category-icon"
-              />
-              <h3>Platform Launch</h3>
-            </li>
-            <li className={cn(styles.item, { [styles.active]: false })}>
-              <Image src={iconLight} alt="category-icon" />
-              <h3>Platform Launch</h3>
-            </li>
-            <li className={cn(styles.item, { [styles.active]: false })}>
-              <Image src={iconLight} alt="category-icon" />
-              <h3>Platform Launch</h3>
-            </li>
-            <li className={cn(styles.item, { [styles.active]: false })}>
-              <Image src={iconLight} alt="category-icon" />
-              <h3>Platform Launch</h3>
-            </li>
+            {boards &&
+              boards.map((item) => (
+                <Link
+                  href={`${item.uid}`}
+                  key={item.uid}
+                  className={cn(styles.item, {
+                    [styles.active]: item.uid === boardId,
+                  })}
+                >
+                  <Image
+                    className={styles.iconActive}
+                    src={iconLight}
+                    alt="category-icon"
+                  />
+                  <h3>Platform Launch</h3>
+                </Link>
+              ))}
+
             <li className={cn(styles.item, styles.createItem)}>
               <Image src={iconLight} alt="category-icon" />
               <h3>+ Create New Board</h3>

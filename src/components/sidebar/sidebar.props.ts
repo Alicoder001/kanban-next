@@ -1,4 +1,7 @@
-import { DetailedHTMLProps, HTMLAttributes } from "react";
+import { BoardI } from "@/interfaces/user.interface";
+import { DetailedHTMLProps, HTMLAttributes, SetStateAction } from "react";
 
 export interface SidebarProps
-  extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
+  extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
+  boards?: BoardI[] | null;
+}
