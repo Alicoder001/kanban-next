@@ -11,3 +11,4 @@ export { default as Button } from "./button/button";
 export { default as Select } from "./select/select";
 export { default as BoardFormat } from "./board-format/board-format";
 export { default as Delete } from "./delete/delete";
+export { default as Check } from "./check-task/check";

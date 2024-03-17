@@ -7,9 +7,7 @@ import React from "react";
 interface Props {}
 const Template = async ({ params }: { params: { boardId: string } }) => {
   const boardId = params.boardId;
-  const data = await getDocument(`boards/${boardId}`);
-
-  return <Tasks board={data as BoardI} />;
+  return <Tasks boardId={boardId} />;
 };
 
 export default Template;

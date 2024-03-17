@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SidebarProps } from "./sidebar.props";
 import styles from "./sidebar.module.css";
 import cn from "classnames";
@@ -17,18 +17,42 @@ import eyesDark from "../../images/eyes-dark.svg";
 import eye from "../../images/eye-light.svg";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import Modal from "../Modal/modal";
+import { useDispatch } from "react-redux";
+import { getAllBoard, setCurrentTask } from "@/redux/slice/board";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setModal } from "@/redux/slice/service";
 const Sidebar = ({
   className,
   boards,
   ...props
 }: SidebarProps): JSX.Element => {
+  const { boards: currentBoards } = useSelector(
+    (state: RootState) => state.board
+  );
+  const { modalType } = useSelector((state: RootState) => state.service);
+  const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [dark, setDark] = useState(false);
   const params = useParams();
   const boardId = params.boardId;
-
+  if (typeof window !== "undefined") {
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        dispatch(setModal("none"));
+      }
+    });
+  }
+  useEffect(() => {
+    dispatch(getAllBoard(boards));
+  }, [boards]);
+  const board =
+    currentBoards?.find((item) => item.uid === boardId) ||
+    (currentBoards && currentBoards[0]);
   return (
     <>
+      {modalType === "sidebar" && <Modal data={board} type="add-board" />}
       <div
         className={cn(className, styles.sidebar, {
           [styles.left]: !show,
@@ -38,12 +62,21 @@ const Sidebar = ({
           <Image src={logoLight} alt="logo" />
         </div>
         <div className={styles.main}>
-          <h4 className={styles.title}>ALL BOARDS (3)</h4>
+          <h4 className={styles.title}>ALL BOARDS ({boards?.length})</h4>
           <ul className={styles.list}>
-            {boards &&
-              boards.map((item) => (
+            {currentBoards &&
+              currentBoards.map((item) => (
                 <Link
-                  href={`${item.uid}`}
+                  onClick={() => {
+                    dispatch(
+                      setCurrentTask({
+                        boardId,
+                        taskId: "",
+                        columnId: "",
+                      })
+                    );
+                  }}
+                  href={`/template/${item.uid}`}
                   key={item.uid}
                   className={cn(styles.item, {
                     [styles.active]: item.uid === boardId,
@@ -54,11 +87,16 @@ const Sidebar = ({
                     src={iconLight}
                     alt="category-icon"
                   />
-                  <h3>Platform Launch</h3>
+                  <h3>{item.title}</h3>
                 </Link>
               ))}
 
-            <li className={cn(styles.item, styles.createItem)}>
+            <li
+              onClick={() => {
+                dispatch(setModal("sidebar"));
+              }}
+              className={cn(styles.item, styles.createItem)}
+            >
               <Image src={iconLight} alt="category-icon" />
               <h3>+ Create New Board</h3>
             </li>

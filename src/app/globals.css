@@ -41,6 +41,9 @@
   --line-color: #e4ebfa;
   --modal-bg: rgba(0, 0, 0, 0.5);
   --input-line: rgba(130, 143, 163, 0.25);
+  --check-bg: #fff;
+  --check-line: 1px solid rgba(130, 143, 163, 0.25);
+  --check-hover: rgba(99, 95, 199, 0.25);
 }
 
 .dark {
@@ -58,6 +61,7 @@
   --title-color: #ffffff;
   --subt-color: #828fa3;
   --line-color: #3e3f4e;
+  --check-bg: #2b2c37;
 }
 h1,
 h2,

@@ -9,6 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 }
 .main {
   max-width: 48rem;
@@ -19,4 +20,6 @@
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
+  overflow-y: scroll;
+  margin: 3rem auto;
 }

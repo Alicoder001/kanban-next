@@ -1,5 +1,6 @@
 import { userInterface } from "@/interfaces/user.interface";
 import { createSlice } from "@reduxjs/toolkit";
+import { finished } from "stream";
 
 const initialState: stateProps = {
   user: null,
@@ -7,6 +8,7 @@ const initialState: stateProps = {
   userError: null,
   userMsg: null,
   userLoading: false,
+  finished: false,
 };
 interface stateProps {
   user: userInterface | null;
@@ -14,6 +16,7 @@ interface stateProps {
   userError: string | null;
   userMsg: string | null;
   userLoading: boolean;
+  finished: boolean;
 }
 const userSlice = createSlice({
   name: "user",
@@ -26,14 +29,17 @@ const userSlice = createSlice({
       state.userLoading = false;
       state.user = action.payload;
       state.loggedIn = true;
+      state.finished = true;
     },
     userFailure(state, action) {
       state.userLoading = false;
       state.userError = action.payload;
+      state.finished = true;
     },
     userLogOut(state) {
       state.user = null;
       state.loggedIn = false;
+      state.finished = true;
     },
   },
 });
