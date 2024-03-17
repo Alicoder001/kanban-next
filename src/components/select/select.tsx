@@ -20,7 +20,6 @@ const Select = ({
   task: newTask,
 }: SelectProps): JSX.Element => {
   const dispatch = useDispatch();
-
   const title = columns.find((item) => item.uid === taskColumnuid)?.title;
   const handleClick = async (columnUid: string) => {
     const updatedColumns = board?.columns?.map((column) => {
@@ -29,13 +28,9 @@ const Select = ({
         if (hasTask) {
           return column;
         } else {
-          console.log({
-            ...column,
-            tasks: column?.tasks ? [...column?.tasks, newTask] : [newTask],
-          });
           return {
             ...column,
-            tasks: column?.tasks ? [...column?.tasks, newTask] : [column.tasks],
+            tasks: column?.tasks ? [...column?.tasks, newTask] : [newTask],
           };
         }
       } else {

@@ -6,8 +6,8 @@ import Button from "../button/button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { BoardI, ColumnI } from "@/interfaces/user.interface";
-import { updateBoard } from "@/redux/slice/board";
-import { doc, setDoc } from "firebase/firestore";
+import { deleteBoard, updateBoard } from "@/redux/slice/board";
+import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useDispatch } from "react-redux";
 import { setModal } from "@/redux/slice/service";
@@ -19,7 +19,7 @@ const Delete = ({ type, board }: DeleteProps) => {
   const { boards, currentTaskInf } = useSelector(
     (state: RootState) => state.board
   );
-  const column = board.columns?.find(
+  const column = board?.columns?.find(
     (column) => column.uid === currentTaskInf?.columnId
   );
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ const Delete = ({ type, board }: DeleteProps) => {
     const updatedTasks = column?.tasks?.filter(
       (task) => task.uid !== currentTaskInf?.taskId
     );
-    const updatedColumns = board.columns?.map((c) => {
+    const updatedColumns = board?.columns?.map((c) => {
       if (c.uid === column?.uid) {
         return { ...c, tasks: updatedTasks };
       } else {
@@ -36,7 +36,7 @@ const Delete = ({ type, board }: DeleteProps) => {
     });
     const updatedBoard: BoardI = { ...board, columns: updatedColumns };
     setDoc(
-      doc(db, "boards", board.uid),
+      doc(db, "boards", board?.uid),
       { updatedBoard },
       {
         merge: true,
@@ -68,15 +68,25 @@ const Delete = ({ type, board }: DeleteProps) => {
         className={styles.wrap}
       >
         <Button
-          onClick={() => {
-            "salom";
+          onClick={async () => {
+            if (board) {
+              deleteDoc(doc(db, "boards", board?.uid))
+                .then(() => {
+                  console.log("board deleted");
+                  dispatch(deleteBoard(board?.uid));
+                  dispatch(setModal("none"));
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            }
           }}
           title="Delete"
           buttonType="dangerous"
         />
         <Button
           onClick={() => {
-            "salom";
+            dispatch(setModal("none"));
           }}
           title="Cancel"
           buttonType="secondary"
@@ -94,7 +104,13 @@ const Delete = ({ type, board }: DeleteProps) => {
       </p>
       <div className={styles.wrap}>
         <Button onClick={handleClick} title="Delete" buttonType="dangerous" />
-        <Button title="Cancel" buttonType="secondary" />
+        <Button
+          onClick={() => {
+            dispatch(setModal("none"));
+          }}
+          title="Cancel"
+          buttonType="secondary"
+        />
       </div>
     </>
   );

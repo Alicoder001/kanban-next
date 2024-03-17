@@ -72,12 +72,6 @@ const Task = ({ type = "add", board, ...props }: TaskProps): JSX.Element => {
             if (hasTask) {
               return column;
             } else {
-              console.log({
-                ...column,
-                tasks: column?.tasks
-                  ? [...column?.tasks, fullTask]
-                  : [fullTask],
-              });
               return {
                 ...column,
                 tasks: column?.tasks

@@ -27,7 +27,7 @@ const BoardFormat = ({ type = "add", board, ...props }: BoardFormatProps) => {
   const [columns, setColumn] = useState<ColumnI[]>(
     type === "edit"
       ? board?.columns
-        ? board.columns
+        ? board?.columns
         : [{ ...initialColumns[0], uid: getUid() }]
       : [{ ...initialColumns[0], uid: getUid() }]
   );
@@ -41,6 +41,7 @@ const BoardFormat = ({ type = "add", board, ...props }: BoardFormatProps) => {
         uid,
         columns,
       };
+      console.log(updatedBoard);
       setDoc(doc(db, "boards", uid), updatedBoard)
         .then((rec) => {
           console.log(rec);
@@ -52,7 +53,7 @@ const BoardFormat = ({ type = "add", board, ...props }: BoardFormatProps) => {
           console.log(error);
         });
     } else if (type === "edit") {
-      const docRef = doc(db, "boards", board?.uid ? board.uid : "");
+      const docRef = doc(db, "boards", board?.uid ? board?.uid : "");
       const updatedBoard = { ...newBoard, columns };
       setDoc(docRef, updatedBoard, { merge: true })
         .then(() => {

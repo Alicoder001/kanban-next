@@ -24,9 +24,18 @@ const Header = ({ ...props }: HeaderProps): JSX.Element => {
   const { modalType } = useSelector((state: RootState) => state.service);
   const dispatch = useDispatch();
   const board = boards.find((item) => item.uid === boardId);
+  const [isShow, setIsShow] = useState(false);
   return (
     <div className={cn(styles.header)} {...props}>
-      {modalType === "header" && <Modal data={board} type="add-task" />}
+      {modalType === "header-add-task" && (
+        <Modal data={board} type="add-task" />
+      )}
+      {modalType === "header-delete-board" && (
+        <Modal data={board} type="delete-board" />
+      )}
+      {modalType === "header-edit-board" && (
+        <Modal data={board} type="edit-board" />
+      )}
       <div
         className={cn(styles.headerLogoWrapper, { [styles.logoHidden]: show })}
       >
@@ -40,13 +49,42 @@ const Header = ({ ...props }: HeaderProps): JSX.Element => {
         <div className={styles.headerLeftWrapper}>
           <button
             onClick={() => {
-              dispatch(setModal("header"));
+              dispatch(setModal("header-add-task"));
             }}
             className={cn(styles.button, "button")}
           >
             +Add New Task
           </button>
-          <Image src={menuLight} alt="logo" />
+          {board && (
+            <div
+              onClick={() => {
+                setIsShow(!isShow);
+              }}
+              className={styles.wrap}
+            >
+              <Image src={menuLight} alt="menu" />
+              {isShow && (
+                <ul className={cn(styles.wrapList)}>
+                  <li
+                    onClick={() => {
+                      dispatch(setModal("header-edit-board"));
+                    }}
+                    className={cn(styles.wrapItem)}
+                  >
+                    Edit Board
+                  </li>
+                  <li
+                    onClick={() => {
+                      dispatch(setModal("header-delete-board"));
+                    }}
+                    className={cn(styles.wrapItem, styles.delete)}
+                  >
+                    Delete Board
+                  </li>
+                </ul>
+              )}
+            </div>
+          )}
         </div>
       </div>
       {/* <div

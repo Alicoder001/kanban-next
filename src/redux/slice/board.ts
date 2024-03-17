@@ -25,7 +25,7 @@ const boardSlice = createSlice({
     },
     addBoard(state, action) {
       const board = action.payload;
-      state.boards = [...board, ...state.boards];
+      state.boards = [board, ...state.boards];
     },
     updateBoard(state, action) {
       const board = action.payload;

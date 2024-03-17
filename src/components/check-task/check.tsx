@@ -33,14 +33,14 @@ const Check = ({ board }: CheckProps) => {
   const [isShow, setIsShow] = useState(false);
   return (
     <div className={styles.check}>
-      <div
-        onClick={() => {
-          setIsShow(!isShow);
-        }}
-        className={styles.header}
-      >
+      <div className={styles.header}>
         <h2 className={styles.title}>{task?.title}</h2>
-        <div className={styles.wrap}>
+        <div
+          onClick={() => {
+            setIsShow(!isShow);
+          }}
+          className={styles.wrap}
+        >
           <Image src={menuLight} alt="menu" />
           {isShow && (
             <ul className={cn(styles.wrapList, { [styles.hidden]: true })}>

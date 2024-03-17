@@ -94,3 +94,41 @@
   padding-top: 3.2rem;
   margin-bottom: 5.4rem;
 }
+.wrap {
+  position: relative;
+}
+.wrap img {
+  flex-shrink: 0;
+}
+.wrap:hover {
+  cursor: pointer;
+}
+.wrapList {
+  position: absolute;
+  width: 19.2rem;
+  right: -2.5rem;
+  top: 200%;
+  background-color: var(--card-color);
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  padding: 1.6rem;
+  border-radius: 0.8rem;
+  box-shadow: var(--card-shadow);
+}
+.wrapItem {
+  font-size: 1.3rem;
+  line-height: 1.76;
+  font-weight: 500;
+  color: var(--subt-color);
+}
+.wrapItem:hover {
+  cursor: pointer;
+  color: var(--title-color);
+}
+.delete {
+  color: var(--btn-des);
+}
+.delete:hover {
+  color: red;
+}
