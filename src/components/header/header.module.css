@@ -165,6 +165,10 @@
 .user:hover {
   cursor: pointer;
 }
+.sign {
+  color: var(--primary-color);
+  font-size: 2rem;
+}
 .sign:hover {
   cursor: pointer;
 }

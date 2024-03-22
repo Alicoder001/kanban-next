@@ -15,7 +15,7 @@ const Board = ({}) => {
   const router = useRouter();
   useEffect(() => {
     if (!user && finished) {
-      router.push("/");
+      router.push("/template");
     }
   }, [user, finished]);
   const dispatch = useDispatch();

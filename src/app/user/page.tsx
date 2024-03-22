@@ -9,7 +9,7 @@ const User = () => {
   const router = useRouter();
   useEffect(() => {
     if (!user && finished) {
-      router.push("/");
+      router.push("/template");
     }
   }, [user, finished]);
   return <div>Userrr</div>;

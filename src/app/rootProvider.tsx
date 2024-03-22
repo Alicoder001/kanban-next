@@ -15,6 +15,7 @@ const RootProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
   const { dark } = useSelector((state: RootState) => state.service);
   const { user, finished } = useSelector((state: RootState) => state.user);
+  const { boardFinish } = useSelector((state: RootState) => state.board);
 
   useEffect(() => {
     const localMode = localStorage.getItem("dark") as string;
@@ -44,7 +45,11 @@ const RootProvider = ({ children }: { children: ReactNode }) => {
       });
   }, [user, finished]);
 
-  return <div className={`root-provider ${dark && "dark"}`}>{children}</div>;
+  return (
+    <div className={`root-provider ${dark && "dark"}`}>
+      {boardFinish ? children : "Loading..."}
+    </div>
+  );
 };
 
 export default RootProvider;
