@@ -8,6 +8,7 @@ import logoDark from "../../images/logo-dark.svg";
 import menuLight from "../../images/menu-icon-light.svg";
 import menuDark from "../../images/menu-icon-dark.svg";
 import logo from "../../images/logo-icon.svg";
+import logoIconLight from "../../images/logo-light.svg";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -21,7 +22,7 @@ const Header = ({ ...props }: HeaderProps): JSX.Element => {
   console.log(boardId);
   const [show, setShow] = useState(false);
   const { boards } = useSelector((state: RootState) => state.board);
-  const { modalType } = useSelector((state: RootState) => state.service);
+  const { modalType, dark } = useSelector((state: RootState) => state.service);
   const dispatch = useDispatch();
   const board = boards.find((item) => item.uid === boardId);
   const [isShow, setIsShow] = useState(false);
@@ -39,8 +40,16 @@ const Header = ({ ...props }: HeaderProps): JSX.Element => {
       <div
         className={cn(styles.headerLogoWrapper, { [styles.logoHidden]: show })}
       >
-        <Image className={styles.logo} src={LogoLight} alt="logo" />
-        <Image className={styles.miniLogo} src={logo} alt="logo" />
+        <Image
+          className={styles.logo}
+          src={!dark ? LogoLight : logoDark}
+          alt="logo"
+        />
+        <Image
+          className={styles.miniLogo}
+          src={!dark ? logo : logo}
+          alt="logo"
+        />
       </div>
       <div
         className={cn(styles.headerWrapper, { [styles.wrapperRight]: show })}

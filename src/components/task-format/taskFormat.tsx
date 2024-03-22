@@ -12,12 +12,12 @@ import { RootState } from "@/redux/store";
 import { getUid } from "@/lib";
 import { title } from "process";
 import { useDispatch } from "react-redux";
-import { updateBoard } from "@/redux/slice/board";
+import { setBoardLoading, updateBoard } from "@/redux/slice/board";
 import { setModal } from "@/redux/slice/service";
 
 const Task = ({ type = "add", board, ...props }: TaskProps): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
-  const { boards, currentTaskInf } = useSelector(
+  const { boards, currentTaskInf, boardLoading } = useSelector(
     (state: RootState) => state.board
   );
   const [taskColumnUid, setTaskColumn] = useState(
@@ -98,13 +98,20 @@ const Task = ({ type = "add", board, ...props }: TaskProps): JSX.Element => {
           ? ({ ...board, columns: updatedColumns } as BoardI)
           : (board as BoardI);
         console.log(updateBoard);
+        dispatch(setBoardLoading(true));
         setDoc(doc(db, "boards", board.uid), updatedBoard, {
           merge: true,
-        }).then((rec) => {
-          console.log("task added");
-          dispatch(updateBoard(updatedBoard));
-          dispatch(setModal("none"));
-        });
+        })
+          .then((rec) => {
+            dispatch(setBoardLoading(false));
+            console.log("task added");
+            dispatch(updateBoard(updatedBoard));
+            dispatch(setModal("none"));
+          })
+          .catch((error) => {
+            dispatch(setBoardLoading(false));
+            console.log(error);
+          });
       }}
     >
       <header>
@@ -172,7 +179,7 @@ recharge the batteries a little."
             });
           }}
           buttonType="secondary"
-          title="+ Add New Column"
+          title="+ Add New Subtask"
         />
       </Label>
       <Label
@@ -192,7 +199,17 @@ recharge the batteries a little."
           columns={board?.columns || []}
         ></Select>
       </Label>
-      <Button type="submit" title="Save Changes" buttonType="primary-S" />
+      <Button
+        type="submit"
+        title={
+          boardLoading
+            ? "Loading..."
+            : type === "add"
+            ? "Add Task"
+            : "Save Changes"
+        }
+        buttonType="primary-S"
+      />
     </form>
   );
 };

@@ -11,8 +11,12 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useDispatch } from "react-redux";
 import { setModal } from "@/redux/slice/service";
-import { addBoard, updateBoard } from "@/redux/slice/board";
+import { addBoard, setBoardLoading, updateBoard } from "@/redux/slice/board";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 const BoardFormat = ({ type = "add", board, ...props }: BoardFormatProps) => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const initialColumns: ColumnI[] = [
     {
@@ -31,6 +35,7 @@ const BoardFormat = ({ type = "add", board, ...props }: BoardFormatProps) => {
         : [{ ...initialColumns[0], uid: getUid() }]
       : [{ ...initialColumns[0], uid: getUid() }]
   );
+  const { boardLoading } = useSelector((state: RootState) => state.board);
   const [newBoard, setBoard] = useState<BoardI>(board ? board : initialBoard);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,26 +47,33 @@ const BoardFormat = ({ type = "add", board, ...props }: BoardFormatProps) => {
         columns,
       };
       console.log(updatedBoard);
+      dispatch(setBoardLoading(true));
       setDoc(doc(db, "boards", uid), updatedBoard)
         .then((rec) => {
           console.log(rec);
           console.log("board added");
           dispatch(addBoard(updatedBoard));
           dispatch(setModal("none"));
+          dispatch(setBoardLoading(false));
+          router.push(`/template/${uid}`);
         })
         .catch((error) => {
+          dispatch(setBoardLoading(false));
           console.log(error);
         });
     } else if (type === "edit") {
       const docRef = doc(db, "boards", board?.uid ? board?.uid : "");
       const updatedBoard = { ...newBoard, columns };
+      dispatch(setBoardLoading(true));
       setDoc(docRef, updatedBoard, { merge: true })
         .then(() => {
+          dispatch(setBoardLoading(false));
           console.log("board updated!");
           dispatch(setModal("none"));
           dispatch(updateBoard(updatedBoard));
         })
         .catch((error) => {
+          dispatch(setBoardLoading(false));
           console.log(error.message);
         });
     }
@@ -124,7 +136,17 @@ const BoardFormat = ({ type = "add", board, ...props }: BoardFormatProps) => {
           type="button"
         />
       </Label>
-      <Button type="submit" title="Create New Board" />
+      <Button
+        disabled={boardLoading}
+        type="submit"
+        title={`${
+          boardLoading
+            ? "Loading..."
+            : type === "add"
+            ? "Create New Board"
+            : "Save Changes"
+        }`}
+      />
     </form>
   );
 };

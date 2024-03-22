@@ -9,6 +9,7 @@
   border-radius: 0.4rem;
   resize: none;
   height: 11.2rem;
+  background-color: transparent;
 }
 .textarea::placeholder {
   color: var(--title-color);

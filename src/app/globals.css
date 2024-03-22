@@ -1,7 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+::-webkit-scrollbar {
+  width: 0px;
+  height: 1px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(114, 113, 113);
+  border-radius: 10px;
+  height: 200px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
 :root {
   --primary-color: #635fc7;
   --primary-color-hv: rgba(99, 95, 199, 0.1);
@@ -105,9 +116,7 @@ html {
 }
 body {
   height: 100%;
-  font-family: var(--jakarta);
   font-weight: 700;
-  background-color: var(--bg-color);
 }
 
 .main {
@@ -132,5 +141,9 @@ body {
     font-size: 2rem;
   }
 }
-
+.root-provider {
+  height: 100%;
+  font-family: var(--jakarta);
+  background-color: var(--bg-color);
+}
 /* @media (prefers-color-scheme: dark) {} */

@@ -22,7 +22,7 @@ import { useDispatch } from "react-redux";
 import { getAllBoard, setCurrentTask } from "@/redux/slice/board";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { setModal } from "@/redux/slice/service";
+import { setModal, setMode } from "@/redux/slice/service";
 const Sidebar = ({
   className,
   boards,
@@ -31,10 +31,9 @@ const Sidebar = ({
   const { boards: currentBoards } = useSelector(
     (state: RootState) => state.board
   );
-  const { modalType } = useSelector((state: RootState) => state.service);
+  const { modalType, dark } = useSelector((state: RootState) => state.service);
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
-  const [dark, setDark] = useState(false);
   const params = useParams();
   const boardId = params.boardId;
   if (typeof window !== "undefined") {
@@ -52,14 +51,20 @@ const Sidebar = ({
     (currentBoards && currentBoards[0]);
   return (
     <>
-      {modalType === "sidebar" && <Modal data={board} type="add-board" />}
+      {modalType === "sidebar-board-add" && (
+        <Modal data={board} type="add-board" />
+      )}
       <div
         className={cn(className, styles.sidebar, {
           [styles.left]: !show,
         })}
       >
         <div className={cn(styles.header)}>
-          <Image src={logoLight} alt="logo" />
+          <Image
+            className={styles.logo}
+            src={!dark ? logoLight : logoDark}
+            alt="logo"
+          />
         </div>
         <div className={styles.main}>
           <h4 className={styles.title}>ALL BOARDS ({boards?.length})</h4>
@@ -93,7 +98,7 @@ const Sidebar = ({
 
             <li
               onClick={() => {
-                dispatch(setModal("sidebar"));
+                dispatch(setModal("sidebar-board-add"));
               }}
               className={cn(styles.item, styles.createItem)}
             >
@@ -107,7 +112,7 @@ const Sidebar = ({
             <Image src={sunLight} alt="sun-icon" />
             <div
               onClick={() => {
-                setDark(!dark);
+                dispatch(setMode(dark));
               }}
               className={styles.toggle}
             >

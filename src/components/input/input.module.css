@@ -11,6 +11,7 @@
   font-weight: 500;
   color: var(--title-color);
   border-radius: 0.4rem;
+  background-color: transparent;
 }
 .input::placeholder {
   color: var(--title-color);

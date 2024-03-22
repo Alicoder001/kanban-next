@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./tasks.module.css";
 import cn from "classnames";
 import { Query, collection, doc, getDocs } from "firebase/firestore";
@@ -12,12 +12,22 @@ import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { setModal } from "@/redux/slice/service";
 import { currentTaskI, setCurrentTask } from "@/redux/slice/board";
+import { useParams, useRouter } from "next/navigation";
 
 const Tasks = ({ boardId }: { boardId: string }) => {
+  const router = useRouter();
   const { modalType } = useSelector((state: RootState) => state.service);
-  const { boards } = useSelector((state: RootState) => state.board);
+  const { boards, boardFinish } = useSelector(
+    (state: RootState) => state.board
+  );
   const board = boards.find((item) => item?.uid === boardId);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (boardFinish && !board) {
+      router.push("/template");
+    }
+  }, [boardFinish, board]);
   if (typeof window !== "undefined") {
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {

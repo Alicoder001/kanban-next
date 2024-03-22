@@ -43,8 +43,12 @@
 .task:hover {
   cursor: pointer;
 }
+
 .task:hover h3 {
   color: var(--primary-color);
+}
+.subt {
+  color: var(--subt-color);
 }
 .newCategory {
   width: 28.8rem;

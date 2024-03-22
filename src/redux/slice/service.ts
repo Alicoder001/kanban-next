@@ -9,7 +9,8 @@ const serviceSlice = createSlice({
   initialState,
   reducers: {
     setMode(state, action) {
-      state.dark = action.payload;
+      state.dark = !action.payload;
+      localStorage.setItem("dark", JSON.stringify(!action.payload));
     },
     setModal(state, action) {
       state.modalType = action.payload;
