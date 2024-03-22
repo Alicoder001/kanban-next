@@ -6,7 +6,7 @@ interface Props {
   };
 }
 const Dashboard = ({ params }: Props) => {
-  return <Tasks userId={params.userId} />;
+  return <Tasks boardId="" />;
 };
 
 export default Dashboard;
