@@ -28,7 +28,7 @@ const Header = ({ ...props }: HeaderProps): JSX.Element => {
     (state: RootState) => state.service
   );
   const dispatch = useDispatch();
-  const board = boards.find((item) => item.uid === boardId);
+  const board = boards?.find((item) => item.uid === boardId);
   const [isShow, setIsShow] = useState(false);
   return (
     <div className={cn(styles.header)} {...props}>

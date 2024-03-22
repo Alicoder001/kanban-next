@@ -20,14 +20,14 @@ const Tasks = ({ boardId }: { boardId: string }) => {
   const { boards, boardFinish } = useSelector(
     (state: RootState) => state.board
   );
-  const board = boards.find((item) => item?.uid === boardId);
+  const board = boards?.find((item) => item?.uid === boardId);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (boardFinish && !board) {
-      router.push("/template");
-    }
-  }, [boardFinish, board]);
+  // useEffect(() => {
+  //   if (boardFinish && !board) {
+  //     router.push("/template");
+  //   }
+  // }, [boardFinish, board]);
   if (typeof window !== "undefined") {
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
