@@ -10,6 +10,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding: 0 1.6rem;
 }
 .main {
   max-width: 48rem;
@@ -22,4 +23,9 @@
   gap: 2.4rem;
   overflow-y: scroll;
   margin: 3rem auto;
+}
+@media (max-width: 768px) {
+  .main {
+    padding: 2.4rem;
+  }
 }

@@ -5,4 +5,8 @@
   height: 100%;
   overflow: scroll;
   flex-direction: column;
+  transition: all 0.5s !important;
 }
+/* .left {
+  transform: translateX(-29.8rem);
+} */

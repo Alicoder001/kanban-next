@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   dark: false,
   modalType: "none",
+  sidebarShow: false,
 };
 const serviceSlice = createSlice({
   name: "service",
@@ -15,7 +16,10 @@ const serviceSlice = createSlice({
     setModal(state, action) {
       state.modalType = action.payload;
     },
+    setSidebar(state, action) {
+      state.sidebarShow = action.payload;
+    },
   },
 });
-export const { setMode, setModal } = serviceSlice.actions;
+export const { setMode, setModal, setSidebar } = serviceSlice.actions;
 export default serviceSlice.reducer;

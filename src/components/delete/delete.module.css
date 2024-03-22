@@ -11,3 +11,8 @@
   gap: 1.6rem;
   margin-bottom: 0.8rem;
 }
+@media (max-width: 650px) {
+  .wrap {
+    flex-direction: column;
+  }
+}

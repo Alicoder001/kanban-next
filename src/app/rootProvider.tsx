@@ -8,6 +8,9 @@ const RootProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
   const localMode = localStorage.getItem("dark") as string;
   const mode = localMode && JSON.parse(localMode);
+  const width = document.getElementById("sidebar");
+  console.log(width);
+
   if (mode === true) {
     dispatch(setMode(!localMode));
   }

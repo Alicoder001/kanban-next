@@ -22,7 +22,7 @@ import { useDispatch } from "react-redux";
 import { getAllBoard, setCurrentTask } from "@/redux/slice/board";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { setModal, setMode } from "@/redux/slice/service";
+import { setModal, setMode, setSidebar } from "@/redux/slice/service";
 const Sidebar = ({
   className,
   boards,
@@ -31,9 +31,11 @@ const Sidebar = ({
   const { boards: currentBoards } = useSelector(
     (state: RootState) => state.board
   );
-  const { modalType, dark } = useSelector((state: RootState) => state.service);
+  const { modalType, dark, sidebarShow } = useSelector(
+    (state: RootState) => state.service
+  );
   const dispatch = useDispatch();
-  const [show, setShow] = useState(false);
+
   const params = useParams();
   const boardId = params.boardId;
   if (typeof window !== "undefined") {
@@ -55,91 +57,94 @@ const Sidebar = ({
         <Modal data={board} type="add-board" />
       )}
       <div
+        id="sidebar"
         className={cn(className, styles.sidebar, {
-          [styles.left]: !show,
+          [styles.left]: !sidebarShow,
         })}
       >
-        <div className={cn(styles.header)}>
-          <Image
-            className={styles.logo}
-            src={!dark ? logoLight : logoDark}
-            alt="logo"
-          />
-        </div>
-        <div className={styles.main}>
-          <h4 className={styles.title}>ALL BOARDS ({boards?.length})</h4>
-          <ul className={styles.list}>
-            {currentBoards &&
-              currentBoards.map((item) => (
-                <Link
-                  onClick={() => {
-                    dispatch(
-                      setCurrentTask({
-                        boardId,
-                        taskId: "",
-                        columnId: "",
-                      })
-                    );
-                  }}
-                  href={`/template/${item.uid}`}
-                  key={item.uid}
-                  className={cn(styles.item, {
-                    [styles.active]: item.uid === boardId,
-                  })}
-                >
-                  <Image
-                    className={styles.iconActive}
-                    src={iconLight}
-                    alt="category-icon"
-                  />
-                  <h3>{item.title}</h3>
-                </Link>
-              ))}
+        <div className={styles.sidebarWrap}>
+          <div className={cn(styles.header)}>
+            <Image
+              className={styles.logo}
+              src={!dark ? logoLight : logoDark}
+              alt="logo"
+            />
+          </div>
+          <div className={styles.main}>
+            <h4 className={styles.title}>ALL BOARDS ({boards?.length})</h4>
+            <ul className={styles.list}>
+              {currentBoards &&
+                currentBoards.map((item) => (
+                  <Link
+                    onClick={() => {
+                      dispatch(
+                        setCurrentTask({
+                          boardId,
+                          taskId: "",
+                          columnId: "",
+                        })
+                      );
+                    }}
+                    href={`/template/${item.uid}`}
+                    key={item.uid}
+                    className={cn(styles.item, {
+                      [styles.active]: item.uid === boardId,
+                    })}
+                  >
+                    <Image
+                      className={styles.iconActive}
+                      src={iconLight}
+                      alt="category-icon"
+                    />
+                    <h3>{item.title}</h3>
+                  </Link>
+                ))}
 
-            <li
-              onClick={() => {
-                dispatch(setModal("sidebar-board-add"));
-              }}
-              className={cn(styles.item, styles.createItem)}
-            >
-              <Image src={iconLight} alt="category-icon" />
-              <h3>+ Create New Board</h3>
-            </li>
-          </ul>
-        </div>
-        <div className={styles.footer}>
-          <div className={styles.mode}>
-            <Image src={sunLight} alt="sun-icon" />
+              <li
+                onClick={() => {
+                  dispatch(setModal("sidebar-board-add"));
+                }}
+                className={cn(styles.item, styles.createItem)}
+              >
+                <Image src={iconLight} alt="category-icon" />
+                <h3>+ Create New Board</h3>
+              </li>
+            </ul>
+          </div>
+          <div className={styles.footer}>
+            <div className={styles.mode}>
+              <Image src={sunLight} alt="sun-icon" />
+              <div
+                onClick={() => {
+                  dispatch(setMode(dark));
+                }}
+                className={styles.toggle}
+              >
+                <div
+                  className={cn(styles.circle, {
+                    [styles.circleRight]: dark,
+                  })}
+                ></div>
+              </div>
+              <Image src={moonLight} alt="moon-icon" />
+            </div>
             <div
               onClick={() => {
-                dispatch(setMode(dark));
+                dispatch(setSidebar(false));
               }}
-              className={styles.toggle}
+              className={styles.hide}
             >
-              <div
-                className={cn(styles.circle, {
-                  [styles.circleRight]: dark,
-                })}
-              ></div>
+              <Image src={eyesLight} alt="hide-icon" />
+              <h3 className={styles.hideTitle}>Hide Sidebar</h3>
             </div>
-            <Image src={moonLight} alt="moon-icon" />
-          </div>
-          <div
-            onClick={() => {
-              setShow(false);
-            }}
-            className={styles.hide}
-          >
-            <Image src={eyesLight} alt="hide-icon" />
-            <h3 className={styles.hideTitle}>Hide Sidebar</h3>
           </div>
         </div>
       </div>
       <div
         onClick={() => {
-          setShow(true);
+          dispatch(setSidebar(true));
         }}
-        className={cn(styles.eyes, { [styles.left]: show })}
+        className={cn(styles.eyes, { [styles.left]: sidebarShow })}
       >
         <Image src={eye} alt="eye" />
       </div>
