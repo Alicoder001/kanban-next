@@ -9,27 +9,33 @@ import menuLight from "../../images/menu-icon-light.svg";
 import menuDark from "../../images/menu-icon-dark.svg";
 import logo from "../../images/logo-icon.svg";
 import logoIconLight from "../../images/logo-light.svg";
+import userIcon from "../../images/user.png";
 import plus from "../../images/plus.svg";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setModal, setSidebar } from "@/redux/slice/service";
 import Modal from "../Modal/modal";
 import { setCurrentTask } from "@/redux/slice/board";
 import accordion from "../../images/accordion-header.svg";
+import { userLogOut } from "@/redux/slice/user.slice";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebase";
 const Header = ({ ...props }: HeaderProps): JSX.Element => {
   const { boardId } = useParams();
   console.log(boardId);
   const [show, setShow] = useState(false);
   const { boards } = useSelector((state: RootState) => state.board);
+  const { user } = useSelector((state: RootState) => state.user);
   const { modalType, dark, sidebarShow } = useSelector(
     (state: RootState) => state.service
   );
   const dispatch = useDispatch();
   const board = boards?.find((item) => item.uid === boardId);
   const [isShow, setIsShow] = useState(false);
+  const router = useRouter();
   return (
     <div className={cn(styles.header)} {...props}>
       {modalType === "header-add-task" && (
@@ -86,6 +92,32 @@ const Header = ({ ...props }: HeaderProps): JSX.Element => {
           >
             +Add New Task
           </button>
+          {!user && (
+            <h1
+              onClick={() => {
+                router.push("/login");
+              }}
+              className={styles.sign}
+            >
+              SignIn
+            </h1>
+          )}
+          {user && (
+            <Image
+              onClick={() => {
+                signOut(auth)
+                  .then(() => {
+                    dispatch(userLogOut());
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+              }}
+              className={styles.user}
+              src={userIcon}
+              alt="user"
+            />
+          )}
           <button
             onClick={() => {
               dispatch(setModal("header-add-task"));

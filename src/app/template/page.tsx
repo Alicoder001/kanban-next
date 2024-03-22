@@ -1,18 +1,23 @@
 "use client";
 import { auth } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./template.module.css";
 import { Button, Modal } from "@/components";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { setModal } from "@/redux/slice/service";
+import { useRouter } from "next/navigation";
 const Board = ({}) => {
-  onAuthStateChanged(auth, (user) => {
-    console.log(user);
-  });
   const { modalType } = useSelector((state: RootState) => state.service);
+  const { user } = useSelector((state: RootState) => state.user);
+  const router = useRouter();
+  useEffect(() => {
+    if (user) {
+      router.push("/user");
+    }
+  }, [user]);
   const dispatch = useDispatch();
   return (
     <div className={styles.main}>

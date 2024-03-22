@@ -16,17 +16,7 @@ const Home = () => {
   const { user, userLoading, finished } = useSelector(
     (state: RootState) => state.user
   );
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        router.push("/template");
-        dispatch(userFailure("autentifikatsiya amalga oshirilmadi!"));
-      } else {
-        // router.push("/template");
-        dispatch(userSucces(user.uid));
-      }
-    });
-  }, []);
+
   if (finished) {
     console.log(user);
   }

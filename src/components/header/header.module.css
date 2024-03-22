@@ -162,3 +162,9 @@
 .delete:hover {
   color: red;
 }
+.user:hover {
+  cursor: pointer;
+}
+.sign:hover {
+  cursor: pointer;
+}

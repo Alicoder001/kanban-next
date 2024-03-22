@@ -20,6 +20,7 @@ const Task = ({ type = "add", board, ...props }: TaskProps): JSX.Element => {
   const { boards, currentTaskInf, boardLoading } = useSelector(
     (state: RootState) => state.board
   );
+  const { user } = useSelector((state: RootState) => state.user);
   const [taskColumnUid, setTaskColumn] = useState(
     currentTaskInf?.columnId || (board?.columns && board?.columns[0]?.uid)
   );
@@ -58,6 +59,7 @@ const Task = ({ type = "add", board, ...props }: TaskProps): JSX.Element => {
       : { ...initialTask, uid: getUid() }
   );
   const dispatch = useDispatch();
+
   return (
     <form
       className={styles.main}
@@ -99,9 +101,13 @@ const Task = ({ type = "add", board, ...props }: TaskProps): JSX.Element => {
           : (board as BoardI);
         console.log(updateBoard);
         dispatch(setBoardLoading(true));
-        setDoc(doc(db, "boards", board.uid), updatedBoard, {
-          merge: true,
-        })
+        setDoc(
+          doc(db, user ? `user/${user}/boards` : `boards`, board.uid),
+          updatedBoard,
+          {
+            merge: true,
+          }
+        )
           .then((rec) => {
             dispatch(setBoardLoading(false));
             console.log("task added");

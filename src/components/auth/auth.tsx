@@ -36,7 +36,8 @@ const Auth = ({ type = "login" }: AuthProps) => {
         password
       );
 
-      dispatch(userSucces({ uid: response.user.uid }));
+      dispatch(userSucces(response.user.uid));
+      localStorage.setItem("user-uid", JSON.stringify(response.user.uid));
       router.push(`/user/${response.user.uid}`);
     } catch (response) {
       const error = response as Error;
@@ -48,7 +49,7 @@ const Auth = ({ type = "login" }: AuthProps) => {
     dispatch(userStart());
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
-      dispatch(userSucces({ uid: response.user.uid }));
+      dispatch(userSucces(response.user.uid));
       router.push(`/user/${response.user.uid}`);
     } catch (response) {
       const error = response as Error;

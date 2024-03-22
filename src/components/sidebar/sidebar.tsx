@@ -23,19 +23,18 @@ import { getAllBoard, setCurrentTask } from "@/redux/slice/board";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setModal, setMode, setSidebar } from "@/redux/slice/service";
-const Sidebar = ({
-  className,
-  boards,
-  ...props
-}: SidebarProps): JSX.Element => {
+const Sidebar = ({ className, ...props }: SidebarProps): JSX.Element => {
   const { boards: currentBoards } = useSelector(
     (state: RootState) => state.board
   );
+
   const { modalType, dark, sidebarShow } = useSelector(
     (state: RootState) => state.service
   );
-  const dispatch = useDispatch();
+  const { user } = useSelector((state: RootState) => state.user);
 
+  const dispatch = useDispatch();
+  console.log(user);
   const params = useParams();
   const boardId = params.boardId;
   if (typeof window !== "undefined") {
@@ -45,9 +44,7 @@ const Sidebar = ({
       }
     });
   }
-  useEffect(() => {
-    dispatch(getAllBoard(boards));
-  }, [boards]);
+
   const board =
     currentBoards?.find((item) => item.uid === boardId) ||
     (currentBoards && currentBoards[0]);
@@ -71,7 +68,9 @@ const Sidebar = ({
             />
           </div>
           <div className={styles.main}>
-            <h4 className={styles.title}>ALL BOARDS ({boards?.length})</h4>
+            <h4 className={styles.title}>
+              ALL BOARDS ({currentBoards?.length})
+            </h4>
             <ul className={styles.list}>
               {currentBoards &&
                 currentBoards.map((item) => (
@@ -85,7 +84,11 @@ const Sidebar = ({
                         })
                       );
                     }}
-                    href={`/template/${item.uid}`}
+                    href={`${
+                      user
+                        ? "/user/" + user + "/" + item.uid
+                        : "/template/" + item.uid
+                    }`}
                     key={item.uid}
                     className={cn(styles.item, {
                       [styles.active]: item.uid === boardId,

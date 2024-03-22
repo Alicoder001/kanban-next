@@ -36,6 +36,7 @@ const BoardFormat = ({ type = "add", board, ...props }: BoardFormatProps) => {
       : [{ ...initialColumns[0], uid: getUid() }]
   );
   const { boardLoading } = useSelector((state: RootState) => state.board);
+  const { user } = useSelector((state: RootState) => state.user);
   const [newBoard, setBoard] = useState<BoardI>(board ? board : initialBoard);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,14 +49,19 @@ const BoardFormat = ({ type = "add", board, ...props }: BoardFormatProps) => {
       };
       console.log(updatedBoard);
       dispatch(setBoardLoading(true));
-      setDoc(doc(db, "boards", uid), updatedBoard)
+      setDoc(
+        doc(db, user ? `user/${user}/boards` : `boards`, uid),
+        updatedBoard
+      )
         .then((rec) => {
           console.log(rec);
           console.log("board added");
           dispatch(addBoard(updatedBoard));
           dispatch(setModal("none"));
           dispatch(setBoardLoading(false));
-          router.push(`/template/${uid}`);
+          router.push(
+            `${user ? "/user/" + user + "/" + uid : "/template/" + uid}`
+          );
         })
         .catch((error) => {
           dispatch(setBoardLoading(false));

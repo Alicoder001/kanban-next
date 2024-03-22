@@ -1,8 +1,0 @@
-import { Modal } from "@/components";
-import React from "react";
-
-const TaskPage = () => {
-  return <Modal type="add-task"></Modal>;
-};
-
-export default TaskPage;

@@ -12,14 +12,25 @@ import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { setModal } from "@/redux/slice/service";
 import { currentTaskI, setCurrentTask } from "@/redux/slice/board";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 
 const Tasks = ({ boardId }: { boardId: string }) => {
-  const router = useRouter();
   const { modalType } = useSelector((state: RootState) => state.service);
   const { boards, boardFinish } = useSelector(
     (state: RootState) => state.board
   );
+  const { user, finished } = useSelector((state: RootState) => state.user);
+  const params = usePathname();
+  const router = useRouter();
+  useEffect(() => {
+    if (params.split("/").includes("template") && user && finished) {
+      router.push(`/user`);
+    }
+    if (params.split("/").includes("user") && !user && finished) {
+      router.push("/template");
+    }
+  }, [user, finished]);
+
   const board = boards?.find((item) => item?.uid === boardId);
   const dispatch = useDispatch();
 

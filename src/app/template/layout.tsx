@@ -5,7 +5,7 @@ import { BoardI } from "@/interfaces/user.interface";
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
-export default async function UserLayout({
+export default async function TemplateLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

@@ -7,7 +7,7 @@ import Modal from "../Modal/modal";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 
-const Main = ({ children, boards }: MainProps) => {
+const Main = ({ children }: MainProps) => {
   const { sidebarShow } = useSelector((state: RootState) => state.service);
 
   return (

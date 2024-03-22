@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { SelectProps } from "./select.props";
 import styles from "./select.module.css";
@@ -9,6 +10,8 @@ import { db } from "@/firebase";
 import { useDispatch } from "react-redux";
 import { BoardI, ColumnI } from "@/interfaces/user.interface";
 import { currentTaskI, setCurrentTask, updateBoard } from "@/redux/slice/board";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 const Select = ({
   taskColumnuid = "",
   isOpen = false,
@@ -21,6 +24,7 @@ const Select = ({
 }: SelectProps): JSX.Element => {
   const dispatch = useDispatch();
   const title = columns.find((item) => item.uid === taskColumnuid)?.title;
+  const { user } = useSelector((state: RootState) => state.user);
   const handleClick = async (columnUid: string) => {
     const updatedColumns = board?.columns?.map((column) => {
       if (columnUid === column.uid) {
@@ -45,7 +49,6 @@ const Select = ({
         }
       }
     }) as ColumnI[];
-    console.log(board);
     const updatedBoard = board?.columns
       ? ({ ...board, columns: updatedColumns } as BoardI)
       : (board as BoardI);
@@ -60,9 +63,13 @@ const Select = ({
         } as currentTaskI)
       );
       console.log(updatedBoard);
-      setDoc(doc(db, "boards", board.uid), updatedBoard, {
-        merge: true,
-      })
+      setDoc(
+        doc(db, user ? `user/${user}/boards` : `boards`, board.uid),
+        updatedBoard,
+        {
+          merge: true,
+        }
+      )
         .then((rec) => {
           console.log(updatedColumns);
         })

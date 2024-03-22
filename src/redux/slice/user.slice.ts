@@ -11,7 +11,7 @@ const initialState: stateProps = {
   finished: false,
 };
 interface stateProps {
-  user: userInterface | null;
+  user: string | null;
   loggedIn: boolean;
   userError: string | null;
   userMsg: string | null;

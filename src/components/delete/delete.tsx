@@ -19,6 +19,7 @@ const Delete = ({ type, board }: DeleteProps) => {
   const { boards, currentTaskInf } = useSelector(
     (state: RootState) => state.board
   );
+  const { user } = useSelector((state: RootState) => state.user);
   const column = board?.columns?.find(
     (column) => column.uid === currentTaskInf?.columnId
   );
@@ -36,7 +37,7 @@ const Delete = ({ type, board }: DeleteProps) => {
     });
     const updatedBoard: BoardI = { ...board, columns: updatedColumns };
     setDoc(
-      doc(db, "boards", board?.uid),
+      doc(db, user ? `user/${user}/boards` : `boards`, board?.uid),
       { updatedBoard },
       {
         merge: true,
@@ -70,7 +71,9 @@ const Delete = ({ type, board }: DeleteProps) => {
         <Button
           onClick={async () => {
             if (board) {
-              deleteDoc(doc(db, "boards", board?.uid))
+              deleteDoc(
+                doc(db, user ? `user/${user}/boards` : `boards`, board?.uid)
+              )
                 .then(() => {
                   console.log("board deleted");
                   dispatch(deleteBoard(board?.uid));
