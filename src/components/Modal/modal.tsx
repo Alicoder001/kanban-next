@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { ModalProps } from "./modal.props";
 import styles from "./modal.module.css";
@@ -6,6 +7,10 @@ import { BoardFormat, Delete, TaskFormat } from "..";
 import { notFound } from "next/navigation";
 import { BoardI } from "@/interfaces/user.interface";
 import Check from "../check-task/check";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import { setModal } from "@/redux/slice/service";
 const Modal = ({ type, data, children, ...props }: ModalProps): JSX.Element => {
   const typeRender = () => {
     switch (type) {
@@ -25,9 +30,16 @@ const Modal = ({ type, data, children, ...props }: ModalProps): JSX.Element => {
         return <Delete type={"task"} board={data as BoardI} />;
     }
   };
+  const dispatch = useDispatch();
   return (
     <div className={cn(styles.modal)} {...props}>
       <div className={styles.main}> {typeRender()}</div>
+      <div
+        onClick={() => {
+          dispatch(setModal("none"));
+        }}
+        className={styles.overlay}
+      ></div>
     </div>
   );
 };
