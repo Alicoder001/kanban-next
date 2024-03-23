@@ -18,14 +18,12 @@ import { useParams, useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setModal, setSidebar } from "@/redux/slice/service";
 import Modal from "../Modal/modal";
-import { setCurrentTask } from "@/redux/slice/board";
 import accordion from "../../images/accordion-header.svg";
 import { userLogOut } from "@/redux/slice/user.slice";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase";
 const Header = ({ ...props }: HeaderProps): JSX.Element => {
   const { boardId } = useParams();
-  console.log(boardId);
   const [show, setShow] = useState(false);
   const { boards } = useSelector((state: RootState) => state.board);
   const { user } = useSelector((state: RootState) => state.user);

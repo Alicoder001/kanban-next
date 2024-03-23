@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { setModal } from "@/redux/slice/service";
+import { setCurrentTask } from "@/redux/slice/board";
 const Modal = ({ type, data, children, ...props }: ModalProps): JSX.Element => {
   const typeRender = () => {
     switch (type) {
@@ -37,6 +38,13 @@ const Modal = ({ type, data, children, ...props }: ModalProps): JSX.Element => {
       <div
         onClick={() => {
           dispatch(setModal("none"));
+          dispatch(
+            setCurrentTask({
+              boardId: "",
+              taskId: "",
+              columnId: "",
+            })
+          );
         }}
         className={styles.overlay}
       ></div>

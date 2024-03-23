@@ -39,13 +39,6 @@ const Tasks = ({ boardId }: { boardId: string }) => {
   //     router.push("/template");
   //   }
   // }, [boardFinish, board]);
-  if (typeof window !== "undefined") {
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        dispatch(setModal("none"));
-      }
-    });
-  }
 
   return (
     <>
@@ -65,58 +58,62 @@ const Tasks = ({ boardId }: { boardId: string }) => {
         <Modal data={board} type="edit-task" />
       )}
       {modalType === "main-add-task" && <Modal data={board} type="add-task" />}
-      <div className={cn(styles.tasks)}>
-        <ul className={styles.categories}>
-          {board?.columns?.map((column) => (
-            <li key={column.uid} className={styles.category}>
-              <div className={styles.titleWrap}>
-                <div className={styles.circle}></div>
-                <h4 className={styles.categoryTitle}>
-                  {column.title}{" "}
-                  {`(${column.tasks?.length ? column.tasks?.length : "0"})`}
-                </h4>
-              </div>
-              <ul className={styles.taskList}>
-                {column?.tasks?.map((task) => (
-                  <li
-                    onClick={() => {
-                      dispatch(setModal("main-check-task"));
-                      dispatch(
-                        setCurrentTask({
-                          boardId,
-                          taskId: task?.uid,
-                          columnId: column.uid,
-                        } as currentTaskI)
-                      );
-                    }}
-                    key={task?.uid}
-                    className={styles.task}
-                  >
-                    <h3 className={styles.title}>{task?.title}</h3>
-                    <p className={styles.subt}>
-                      {
-                        task?.subtasks?.filter(
-                          (subtask) => subtask.complete === true
-                        ).length
-                      }{" "}
-                      of {task?.subtasks?.length} substasks
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))}
+      {board?.columns?.length !== 0 ? (
+        <div className={cn(styles.tasks)}>
+          <ul className={styles.categories}>
+            {board?.columns?.map((column) => (
+              <li key={column.uid} className={styles.category}>
+                <div className={styles.titleWrap}>
+                  <div className={styles.circle}></div>
+                  <h4 className={styles.categoryTitle}>
+                    {column.title}{" "}
+                    {`(${column.tasks?.length ? column.tasks?.length : "0"})`}
+                  </h4>
+                </div>
+                <ul className={styles.taskList}>
+                  {column?.tasks?.map((task) => (
+                    <li
+                      onClick={() => {
+                        dispatch(setModal("main-check-task"));
+                        dispatch(
+                          setCurrentTask({
+                            boardId,
+                            taskId: task?.uid,
+                            columnId: column.uid,
+                          } as currentTaskI)
+                        );
+                      }}
+                      key={task?.uid}
+                      className={styles.task}
+                    >
+                      <h3 className={styles.title}>{task?.title}</h3>
+                      <p className={styles.subt}>
+                        {
+                          task?.subtasks?.filter(
+                            (subtask) => subtask.complete === true
+                          ).length
+                        }{" "}
+                        of {task?.subtasks?.length} substasks
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
 
-          <div
-            onClick={() => {
-              dispatch(setModal("main-edit-board"));
-            }}
-            className={styles.newCategory}
-          >
-            + New Column
-          </div>
-        </ul>
-      </div>
+            <div
+              onClick={() => {
+                dispatch(setModal("main-edit-board"));
+              }}
+              className={styles.newCategory}
+            >
+              + New Column
+            </div>
+          </ul>
+        </div>
+      ) : (
+        "add column"
+      )}
     </>
   );
 };

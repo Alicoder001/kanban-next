@@ -11,7 +11,12 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useDispatch } from "react-redux";
 import { setModal } from "@/redux/slice/service";
-import { addBoard, setBoardLoading, updateBoard } from "@/redux/slice/board";
+import {
+  addBoard,
+  setBoardLoading,
+  setCurrentTask,
+  updateBoard,
+} from "@/redux/slice/board";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -35,7 +40,9 @@ const BoardFormat = ({ type = "add", board, ...props }: BoardFormatProps) => {
         : [{ ...initialColumns[0], uid: getUid() }]
       : [{ ...initialColumns[0], uid: getUid() }]
   );
-  const { boardLoading } = useSelector((state: RootState) => state.board);
+  const { boardLoading, boards } = useSelector(
+    (state: RootState) => state.board
+  );
   const { user } = useSelector((state: RootState) => state.user);
   const [newBoard, setBoard] = useState<BoardI>(board ? board : initialBoard);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -47,41 +54,86 @@ const BoardFormat = ({ type = "add", board, ...props }: BoardFormatProps) => {
         uid,
         columns,
       };
-      console.log(updatedBoard);
-      dispatch(setBoardLoading(true));
-      setDoc(
-        doc(db, user ? `user/${user}/boards` : `boards`, uid),
-        updatedBoard
-      )
-        .then((rec) => {
-          console.log(rec);
-          console.log("board added");
-          dispatch(addBoard(updatedBoard));
-          dispatch(setModal("none"));
-          dispatch(setBoardLoading(false));
-          router.push(
-            `${user ? "/user/" + user + "/" + uid : "/template/" + uid}`
-          );
-        })
-        .catch((error) => {
-          dispatch(setBoardLoading(false));
-          console.log(error);
-        });
+      if (user) {
+        dispatch(setBoardLoading(true));
+        setDoc(doc(db, `user/${user}/boards`, uid), updatedBoard)
+          .then((rec) => {
+            console.log("board added");
+            dispatch(addBoard(updatedBoard));
+            dispatch(setModal("none"));
+            dispatch(
+              setCurrentTask({
+                boardId: "",
+                taskId: "",
+                columnId: "",
+              })
+            );
+            dispatch(setBoardLoading(false));
+            router.push(
+              user ? `${"/user/" + user + "/" + uid}` : `/template/${uid}`
+            );
+          })
+          .catch((error) => {
+            dispatch(setBoardLoading(false));
+            console.log(error);
+          });
+      } else {
+        const updatedBoards = [updatedBoard, ...boards];
+        localStorage.setItem("template", JSON.stringify(updatedBoards));
+        console.log("board updated");
+        dispatch(addBoard(updatedBoard));
+        dispatch(setModal("none"));
+        dispatch(
+          setCurrentTask({
+            boardId: "",
+            taskId: "",
+            columnId: "",
+          })
+        );
+      }
     } else if (type === "edit") {
-      const docRef = doc(db, "boards", board?.uid ? board?.uid : "");
+      const docRef = doc(db, `user/${user}/boards/${board?.uid}`);
       const updatedBoard = { ...newBoard, columns };
-      dispatch(setBoardLoading(true));
-      setDoc(docRef, updatedBoard, { merge: true })
-        .then(() => {
-          dispatch(setBoardLoading(false));
-          console.log("board updated!");
-          dispatch(setModal("none"));
-          dispatch(updateBoard(updatedBoard));
-        })
-        .catch((error) => {
-          dispatch(setBoardLoading(false));
-          console.log(error.message);
+      if (user) {
+        dispatch(setBoardLoading(true));
+        setDoc(docRef, updatedBoard, { merge: true })
+          .then(() => {
+            dispatch(setBoardLoading(false));
+            console.log("board updated!");
+            dispatch(setModal("none"));
+            dispatch(
+              setCurrentTask({
+                boardId: "",
+                taskId: "",
+                columnId: "",
+              })
+            );
+            dispatch(updateBoard(updatedBoard));
+          })
+          .catch((error) => {
+            dispatch(setBoardLoading(false));
+            console.log(error.message);
+          });
+      } else {
+        const updatedBoards = boards.map((item) => {
+          if (item.uid === board?.uid) {
+            return updatedBoard;
+          } else {
+            return item;
+          }
         });
+        localStorage.setItem("template", JSON.stringify(updatedBoards));
+        console.log("board updated");
+        dispatch(updateBoard(updatedBoard));
+        dispatch(setModal("none"));
+        dispatch(
+          setCurrentTask({
+            boardId: "",
+            taskId: "",
+            columnId: "",
+          })
+        );
+      }
     }
   };
   return (

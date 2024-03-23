@@ -12,7 +12,11 @@ import { RootState } from "@/redux/store";
 import { getUid } from "@/lib";
 import { title } from "process";
 import { useDispatch } from "react-redux";
-import { setBoardLoading, updateBoard } from "@/redux/slice/board";
+import {
+  setBoardLoading,
+  setCurrentTask,
+  updateBoard,
+} from "@/redux/slice/board";
 import { setModal } from "@/redux/slice/service";
 
 const Task = ({ type = "add", board, ...props }: TaskProps): JSX.Element => {
@@ -25,7 +29,6 @@ const Task = ({ type = "add", board, ...props }: TaskProps): JSX.Element => {
     currentTaskInf?.columnId || (board?.columns && board?.columns[0]?.uid)
   );
 
-  console.log(taskColumnUid);
   const column: ColumnI | undefined = board?.columns?.find(
     (column) => column.uid === currentTaskInf?.columnId
   );
@@ -59,7 +62,6 @@ const Task = ({ type = "add", board, ...props }: TaskProps): JSX.Element => {
       : { ...initialTask, uid: getUid() }
   );
   const dispatch = useDispatch();
-
   return (
     <form
       className={styles.main}
@@ -69,10 +71,17 @@ const Task = ({ type = "add", board, ...props }: TaskProps): JSX.Element => {
         const updatedColumns = board?.columns?.map((column) => {
           if (taskColumnUid === column.uid) {
             const hasTask = column.tasks?.find(
-              (task) => task.uid === newTask.uid
+              (task) => task.uid === fullTask.uid
             );
             if (hasTask) {
-              return column;
+              const newTasks = column.tasks?.map((task) => {
+                if (fullTask.uid === task.uid) {
+                  return fullTask;
+                } else {
+                  return task;
+                }
+              });
+              return { ...column, tasks: newTasks };
             } else {
               return {
                 ...column,
@@ -99,25 +108,49 @@ const Task = ({ type = "add", board, ...props }: TaskProps): JSX.Element => {
         const updatedBoard = board?.columns
           ? ({ ...board, columns: updatedColumns } as BoardI)
           : (board as BoardI);
-        console.log(updateBoard);
-        dispatch(setBoardLoading(true));
-        setDoc(
-          doc(db, user ? `user/${user}/boards` : `boards`, board.uid),
-          updatedBoard,
-          {
+
+        if (user) {
+          dispatch(setBoardLoading(true));
+          setDoc(doc(db, `user/${user}/boards/${board?.uid}`), updatedBoard, {
             merge: true,
-          }
-        )
-          .then((rec) => {
-            dispatch(setBoardLoading(false));
-            console.log("task added");
-            dispatch(updateBoard(updatedBoard));
-            dispatch(setModal("none"));
           })
-          .catch((error) => {
-            dispatch(setBoardLoading(false));
-            console.log(error);
+            .then((rec) => {
+              dispatch(setBoardLoading(false));
+              console.log("task added");
+              dispatch(updateBoard(updatedBoard));
+              dispatch(setModal("none"));
+              dispatch(
+                setCurrentTask({
+                  boardId: "",
+                  taskId: "",
+                  columnId: "",
+                })
+              );
+            })
+            .catch((error) => {
+              dispatch(setBoardLoading(false));
+              console.log(error);
+            });
+        } else {
+          const updatedBoards = boards.map((item) => {
+            if (item.uid === board?.uid) {
+              return updatedBoard;
+            } else {
+              return item;
+            }
           });
+          localStorage.setItem("template", JSON.stringify(updatedBoards));
+          console.log("task added");
+          dispatch(updateBoard(updatedBoard));
+          dispatch(setModal("none"));
+          dispatch(
+            setCurrentTask({
+              boardId: "",
+              taskId: "",
+              columnId: "",
+            })
+          );
+        }
       }}
     >
       <header>
@@ -151,7 +184,7 @@ recharge the batteries a little."
           const currentUid = Object.assign({}, e?.target?.dataset)?.uid;
           if (currentUid) {
             setSubtask((prev) => {
-              return prev.filter((item) => item.uid === currentUid);
+              return prev.filter((item) => item.uid !== currentUid);
             });
           }
         }}

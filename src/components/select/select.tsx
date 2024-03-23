@@ -24,6 +24,7 @@ const Select = ({
 }: SelectProps): JSX.Element => {
   const dispatch = useDispatch();
   const title = columns.find((item) => item.uid === taskColumnuid)?.title;
+  const { boards } = useSelector((state: RootState) => state.board);
   const { user } = useSelector((state: RootState) => state.user);
   const handleClick = async (columnUid: string) => {
     const updatedColumns = board?.columns?.map((column) => {
@@ -49,9 +50,9 @@ const Select = ({
         }
       }
     }) as ColumnI[];
-    const updatedBoard = board?.columns
-      ? ({ ...board, columns: updatedColumns } as BoardI)
-      : (board as BoardI);
+    const updatedBoard = (
+      board?.columns ? { ...board, columns: updatedColumns } : board
+    ) as BoardI;
 
     if (board) {
       dispatch(updateBoard(updatedBoard));
@@ -62,21 +63,22 @@ const Select = ({
           columnId: columnUid,
         } as currentTaskI)
       );
-      console.log(updatedBoard);
-      setDoc(
-        doc(db, user ? `user/${user}/boards` : `boards`, board.uid),
-        updatedBoard,
-        {
+      if (user) {
+        setDoc(doc(db, `user/${user}/boards`, board.uid), updatedBoard, {
           merge: true,
-        }
-      )
-        .then((rec) => {
-          console.log(updatedColumns);
         })
-        .catch((error) => {
-          console.log(updateBoard);
-          console.log(error);
+          .then((rec) => {})
+          .catch((error) => {});
+      } else {
+        const updatedBoards: BoardI[] = boards?.map((item: BoardI) => {
+          if (item.uid === board?.uid) {
+            return updatedBoard;
+          } else {
+            return item;
+          }
         });
+        localStorage.setItem("template", JSON.stringify(updatedBoards));
+      }
     }
   };
   return (

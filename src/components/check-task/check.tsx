@@ -21,6 +21,7 @@ const Check = ({ board }: CheckProps) => {
   const { currentTaskInf, boards } = useSelector(
     (state: RootState) => state.board
   );
+  const { user } = useSelector((state: RootState) => state.user);
   const [isOpen, setIsOpen] = useState(false);
   const column = board.columns?.find(
     (column) => column.uid === currentTaskInf?.columnId
@@ -98,15 +99,33 @@ const Check = ({ board }: CheckProps) => {
                     columns: updatedColumns,
                   };
                   dispatch(updateBoard(updatedBoard));
-                  setDoc(doc(db, "boards", board.uid), updatedBoard, {
-                    merge: true,
-                  })
-                    .then((rec) => {
-                      console.log(subtask.complete);
-                    })
-                    .catch((rec) => {
-                      dispatch(updateBoard(board));
+                  if (user) {
+                    setDoc(
+                      doc(db, `user/${user}/boards/${board?.uid}`),
+                      updatedBoard,
+                      {
+                        merge: true,
+                      }
+                    )
+                      .then((rec) => {
+                        console.log(subtask.complete);
+                      })
+                      .catch((error) => {
+                        console.log(error?.message);
+                      });
+                  } else {
+                    const updatedBoards = boards.map((item) => {
+                      if (item.uid === board?.uid) {
+                        return updatedBoard;
+                      } else {
+                        return item;
+                      }
                     });
+                    localStorage.setItem(
+                      "template",
+                      JSON.stringify(updatedBoards)
+                    );
+                  }
                 }}
                 key={subtask.uid}
                 className={cn(styles.item, {

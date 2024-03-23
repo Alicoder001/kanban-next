@@ -1,5 +1,4 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import { SidebarProps } from "./sidebar.props";
 import styles from "./sidebar.module.css";
 import cn from "classnames";
@@ -7,43 +6,29 @@ import Image from "next/image";
 import logoLight from "../../images/logo-light.svg";
 import logoDark from "../../images/logo-dark.svg";
 import iconLight from "../../images/category-icon-light.svg";
-import iconDark from "../../images/category-icon-dark.svg";
 import sunLight from "../../images/sunLight.svg";
-import sunDark from "../../images/sun.svg";
-import moonDark from "../../images/moon.svg";
 import moonLight from "../../images/moonLight.svg";
 import eyesLight from "../../images/eyes-light.svg";
-import eyesDark from "../../images/eyes-dark.svg";
 import eye from "../../images/eye-light.svg";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import Modal from "../Modal/modal";
+import { useParams } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { getAllBoard, setCurrentTask } from "@/redux/slice/board";
+import { setCurrentTask } from "@/redux/slice/board";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setModal, setMode, setSidebar } from "@/redux/slice/service";
-const Sidebar = ({ className, ...props }: SidebarProps): JSX.Element => {
+const Sidebar = ({ className }: SidebarProps): JSX.Element => {
+  const dispatch = useDispatch();
   const { boards: currentBoards } = useSelector(
     (state: RootState) => state.board
   );
-
   const { modalType, dark, sidebarShow } = useSelector(
     (state: RootState) => state.service
   );
   const { user } = useSelector((state: RootState) => state.user);
-
-  const dispatch = useDispatch();
-  console.log(user);
   const params = useParams();
   const boardId = params.boardId;
-  if (typeof window !== "undefined") {
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        dispatch(setModal("none"));
-      }
-    });
-  }
 
   const board =
     currentBoards?.find((item) => item.uid === boardId) ||

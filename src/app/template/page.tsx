@@ -11,13 +11,19 @@ import { setModal } from "@/redux/slice/service";
 import { useRouter } from "next/navigation";
 const Board = ({}) => {
   const { modalType } = useSelector((state: RootState) => state.service);
-  const { user } = useSelector((state: RootState) => state.user);
+  const { boards, boardFinish } = useSelector(
+    (state: RootState) => state.board
+  );
+  const { user, finished } = useSelector((state: RootState) => state.user);
   const router = useRouter();
   useEffect(() => {
-    if (user) {
+    if (user && finished) {
       router.push("/user");
+    } else if (boards && boards[0]) {
+      router.push(`/template/${boards[0].uid}`);
     }
-  }, [user]);
+  }, [user, finished, boards, boardFinish]);
+
   const dispatch = useDispatch();
   return (
     <div className={styles.main}>
@@ -28,7 +34,7 @@ const Board = ({}) => {
           dispatch(setModal("main-board-add"));
         }}
         buttonType="primary-S"
-        title="Add Column +"
+        title="Add Board +"
       />
     </div>
   );

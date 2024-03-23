@@ -45,6 +45,7 @@
   border-radius: 0.2rem;
   background-color: var(--check-bg);
   border: var(--check-line);
+  flex-shrink: 0;
 }
 .checked .checker {
   background-color: var(--primary-color);

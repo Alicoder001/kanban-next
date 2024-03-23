@@ -6,11 +6,12 @@ import Button from "../button/button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { BoardI, ColumnI } from "@/interfaces/user.interface";
-import { deleteBoard, updateBoard } from "@/redux/slice/board";
+import { deleteBoard, setCurrentTask, updateBoard } from "@/redux/slice/board";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useDispatch } from "react-redux";
 import { setModal } from "@/redux/slice/service";
+import { useRouter } from "next/navigation";
 
 const Delete = ({ type, board }: DeleteProps) => {
   switch (type) {
@@ -23,6 +24,7 @@ const Delete = ({ type, board }: DeleteProps) => {
   const column = board?.columns?.find(
     (column) => column.uid === currentTaskInf?.columnId
   );
+  const router = useRouter();
   const dispatch = useDispatch();
   const handleClick = async () => {
     const updatedTasks = column?.tasks?.filter(
@@ -36,26 +38,50 @@ const Delete = ({ type, board }: DeleteProps) => {
       }
     });
     const updatedBoard: BoardI = { ...board, columns: updatedColumns };
-    setDoc(
-      doc(db, user ? `user/${user}/boards` : `boards`, board?.uid),
-      { updatedBoard },
-      {
-        merge: true,
-      }
-    ).then((rec) => {
+    if (user) {
+      setDoc(
+        doc(db, user ? `user/${user}/boards` : `boards`, board?.uid),
+        { updatedBoard },
+        {
+          merge: true,
+        }
+      ).then((rec) => {
+        console.log("task deleted");
+        dispatch(updateBoard(updatedBoard));
+        dispatch(setModal("none"));
+        dispatch(
+          setCurrentTask({
+            boardId: "",
+            taskId: "",
+            columnId: "",
+          })
+        );
+      });
+    } else {
+      const updatedBoards = boards.map((item) => {
+        if (item.uid === board?.uid) {
+          return updatedBoard;
+        } else {
+          return item;
+        }
+      });
+      localStorage.setItem("template", JSON.stringify(updatedBoards));
       console.log("task deleted");
       dispatch(updateBoard(updatedBoard));
       dispatch(setModal("none"));
-    });
+      dispatch(
+        setCurrentTask({
+          boardId: "",
+          taskId: "",
+          columnId: "",
+        })
+      );
+    }
   };
 
   return type === "board" ? (
     <>
-      <header
-        onClick={() => {
-          console.log("header");
-        }}
-      >
+      <header>
         <h2 className={styles.title}>Delete this Board?</h2>
       </header>
       <p className={styles.subtitle}>
@@ -71,17 +97,47 @@ const Delete = ({ type, board }: DeleteProps) => {
         <Button
           onClick={async () => {
             if (board) {
-              deleteDoc(
-                doc(db, user ? `user/${user}/boards` : `boards`, board?.uid)
-              )
-                .then(() => {
-                  console.log("board deleted");
-                  dispatch(deleteBoard(board?.uid));
-                  dispatch(setModal("none"));
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
+              if (user) {
+                deleteDoc(doc(db, `user/${user}/boards`, board?.uid))
+                  .then(() => {
+                    console.log("board deleted");
+                    dispatch(deleteBoard(board?.uid));
+                    dispatch(setModal("none"));
+                    dispatch(
+                      setCurrentTask({
+                        boardId: "",
+                        taskId: "",
+                        columnId: "",
+                      })
+                    );
+                    router.push(
+                      boards.length > 1
+                        ? `/user/${user}/${boards[0].uid}`
+                        : `/user/${user}`
+                    );
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+              } else {
+                const updateBoards = boards?.filter(
+                  (item) => item?.uid !== board?.uid
+                );
+                localStorage.setItem("template", JSON.stringify(updateBoards));
+                console.log("board deleted");
+                dispatch(deleteBoard(board?.uid));
+                dispatch(setModal("none"));
+                dispatch(
+                  setCurrentTask({
+                    boardId: "",
+                    taskId: "",
+                    columnId: "",
+                  })
+                );
+                router.push(
+                  boards.length > 1 ? `/template/${boards[0].uid}` : `/template`
+                );
+              }
             }
           }}
           title="Delete"
@@ -90,6 +146,13 @@ const Delete = ({ type, board }: DeleteProps) => {
         <Button
           onClick={() => {
             dispatch(setModal("none"));
+            dispatch(
+              setCurrentTask({
+                boardId: "",
+                taskId: "",
+                columnId: "",
+              })
+            );
           }}
           title="Cancel"
           buttonType="secondary"
@@ -110,6 +173,13 @@ const Delete = ({ type, board }: DeleteProps) => {
         <Button
           onClick={() => {
             dispatch(setModal("none"));
+            dispatch(
+              setCurrentTask({
+                boardId: "",
+                taskId: "",
+                columnId: "",
+              })
+            );
           }}
           title="Cancel"
           buttonType="secondary"
