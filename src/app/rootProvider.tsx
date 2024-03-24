@@ -58,12 +58,24 @@ const RootProvider = ({ children }: { children: ReactNode }) => {
       localStorage.getItem("template") as string
     ) as BoardI[] | null;
 
-    if (hasLocalData && !user && finished) {
+    if (user && finished) {
+      getDocs(collection(db, `user/${user}/boards`))
+        .then((res: any) => {
+          const boards = res?.docs?.map((item: BoardI) => {
+            return item.data();
+          }) as BoardI[];
+          dispatch(getAllBoard(boards));
+          console.log(boards);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    if (!user && finished && hasLocalData) {
       dispatch(getAllBoard(hasLocalData as BoardI[]));
-    } else {
-      getDocs(
-        collection(db, user ? `user/${user}/boards` : (`boards` as string))
-      )
+    }
+    if (!user && finished && !hasLocalData) {
+      getDocs(collection(db, `boards`))
         .then((res: any) => {
           const boards = res?.docs?.map((item: BoardI) => {
             return item.data();

@@ -1,16 +1,22 @@
-import { auth } from "@/firebase";
-import { getCollection } from "@/lib";
-import { userFailure, userSucces } from "@/redux/slice/user.slice";
+"use client";
+
 import { RootState } from "@/redux/store";
-import { onAuthStateChanged } from "firebase/auth";
 import { redirect, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 
 const Home = () => {
-  redirect("/template");
-
+  const router = useRouter();
+  const { user, finished } = useSelector((state: RootState) => state.user);
+  const { boards } = useSelector((state: RootState) => state.board);
+  useEffect(() => {
+    if (!user && finished) {
+      router.push("/template");
+    }
+    if (user) {
+      router.push(`/user/${user}${boards[0] ? "/" + boards[0].uid : ""}`);
+    }
+  }, [user, finished]);
   return <h1>Welcome</h1>;
 };
 
